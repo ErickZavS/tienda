@@ -5,6 +5,7 @@
  */
 package proyectofinal.DAO;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,15 +20,19 @@ import proyectofinal.Modelo.EmpleadosModelo;
  */
 public class EmpleadoDAO {
     
-        Conexion conectar;
+private static Connection conectar=null;
     PreparedStatement ps;
     ResultSet rs;
+    
+    public EmpleadoDAO() {
+    
+}
     
     public void Crear(EmpleadosModelo empleadosModelo) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("INSERT INTO diccionario(Palabra) values(?);");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("INSERT INTO empleados (Nombre, Apellidos, Cargo, FechaNacimiento, FechaContratacion, Direccion, Ciudad, Pais, TelefonoDomicilio, Extension, Notas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             ps.setString(1, empleadosModelo.getApellido());
             ps.setString(2, empleadosModelo.getNombre());
             ps.setString(3, empleadosModelo.getCargo());
@@ -48,7 +53,7 @@ public class EmpleadoDAO {
                 System.out.println("Error al registrar en la tabla Diccionario");
             }
              
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -61,8 +66,8 @@ public class EmpleadoDAO {
     public void Actualizar(EmpleadosModelo empleadosModelo) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("UPDATE diccionario SET nivel=? WHERE IdDiccionario=? ;");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("UPDATE empleados SET Nombre=?, Apellidos=?, Cargo=?, FechaNacimiento=?, FechaContratacion=?, Direccion=?, Ciudad=?, Pais=?, TelefonoDomicilio=?, Extension=?, Notas=? WHERE idEmpleados=? ;");
             ps.setString(1, empleadosModelo.getApellido());
             ps.setString(2, empleadosModelo.getNombre());
             ps.setString(3, empleadosModelo.getCargo());
@@ -83,7 +88,7 @@ public class EmpleadoDAO {
                 System.out.println("Error al actualizar el nivel ");
             }
               //conectar.getconexion().commit();
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -98,8 +103,8 @@ public class EmpleadoDAO {
         EmpleadosModelo empleadosModelo;
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("SELECT * FROM diccionario where nivel=0;");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("SELECT * FROM empleados;");
             //ps.setString(1, dni);
             //ps.setInt(2, estado);
 
@@ -128,7 +133,7 @@ public class EmpleadoDAO {
 
             }
             System.out.println("cantidad de registros: " + cantidad);
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -142,8 +147,8 @@ public class EmpleadoDAO {
     public void Eliminar(int IdEmpleado) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("DELETE FROM diccionario(Palabra) values(?);");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("DELETE FROM empleados WHERE idEmpleados=?;");
             ps.setInt(1, IdEmpleado);
 
             int Resultado = ps.executeUpdate();
@@ -154,7 +159,7 @@ public class EmpleadoDAO {
                 System.out.println("Error al registrar en la tabla Diccionario");
             }
              
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 

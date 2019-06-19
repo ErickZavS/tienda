@@ -5,8 +5,15 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.plaf.DesktopPaneUI;
+import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.INITIALIZE;
+import proyectofinal.DAO.ClienteDAO;
+import proyectofinal.DAO.ProductosDAO;
+import proyectofinal.Modelo.ClienteModelo;
+import proyectofinal.Modelo.ProductosModelo;
 
 /**
  *
@@ -14,11 +21,37 @@ import org.omg.CORBA.INITIALIZE;
  */
 public class Productos extends javax.swing.JInternalFrame {
 int id;
+
+DefaultTableModel model;
+    Object columnas[]={"ID", "Nombre de Productos", "Unidad de Medida", "Categoria"};
+    Object[] obj;
+    
+    ProductosDAO dao ;    
+    List<ProductosModelo> datos=new ArrayList<>();
+    ProductosModelo usuario;
+    Integer idUsuario;
     /**
      * Creates new form Proveedores
      */
     public Productos() {
         initComponents();
+        
+        dao=new ProductosDAO();
+        datos =dao.Lista();
+        obj=new Object[datos.size()];
+        model = new DefaultTableModel(columnas,0);
+        for (int i = 0; i < datos.size(); i++) {
+            
+            model.addRow(obj);
+            model.setValueAt(datos.get(i).getIdProducto(), i, 0);
+            model.setValueAt(datos.get(i).getNombreProductos(), i, 1);
+            model.setValueAt(datos.get(i).getUnidadMedida(), i, 2);
+            model.setValueAt(datos.get(i).getIdCategoría(), i, 3);
+            
+        }
+        
+        tablaProductos.setModel(model);
+        //tablaUsuarios.enable(false);
     }
 
     /**
@@ -37,10 +70,10 @@ int id;
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaProductos = new javax.swing.JTable();
 
         setClosable(true);
-        setTitle("Maestro de Categorias");
+        setTitle("Maestro de Productos");
 
         jScrollPane1.setViewportView(jTextPane1);
 
@@ -65,9 +98,9 @@ int id;
             }
         });
 
-        btnBuscar.setText("buscar");
+        btnBuscar.setText("Buscar");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,7 +111,7 @@ int id;
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tablaProductos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +127,7 @@ int id;
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificar)
@@ -149,7 +182,7 @@ int id;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 }

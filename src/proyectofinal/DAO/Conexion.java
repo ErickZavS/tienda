@@ -15,15 +15,21 @@ import javax.swing.JOptionPane;
  * @author Alejandro
  */
 public class Conexion {
-     Connection conectar=null;
+    // Connection conectar;
     
-public Connection getconexion() {
+public static Connection getconexion() {
+        Connection conectar=null;
     try{
-        
+   
+
+        //Class.forName("com.mysql.jdbc.Driver");
         Class.forName("com.mysql.jdbc.Driver");
-        conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ahorcadodb","root","7531594682");
-        //conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ahorcadodb","root","mysql");
-       // System.out.println("conexion exitosa");
+       // conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ahorcadodb","root","7531594682");
+       
+        conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/proyectofinal","root","7531594682");
+        //conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/proyectofinal?zeroDateTimeBehavior=convertToNull","root","7531594682");
+       // conectar= (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/ahorcadodb","root","7531594682");
+        System.out.println("conexion exitosa");
     }   catch (SQLException ex) {
             System.out.println("Error de conexión sql");
             JOptionPane.showMessageDialog(null, "Error de conexión sql"+ ex.getMessage());

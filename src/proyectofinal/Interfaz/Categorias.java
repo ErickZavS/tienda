@@ -5,20 +5,42 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.DesktopPaneUI;
+import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.INITIALIZE;
+import proyectofinal.DAO.CategoriasDAO;
+import proyectofinal.Modelo.CategoriaModelo;
 
 /**
  *
  * @author USUARIO
  */
 public class Categorias extends javax.swing.JInternalFrame {
-int id;
+
+    int id;
+
+    DefaultTableModel model;
+    Object columnas[] = {"ID", "Nombre de Categoria", "Descripción"};
+    Object[] obj;
+
+    CategoriasDAO dao;
+    List<CategoriaModelo> datos = new ArrayList<>();
+    Integer idCategoria;
+
     /**
      * Creates new form Proveedores
      */
     public Categorias() {
         initComponents();
+
+        dao = new CategoriasDAO();
+ 
+        llenardatos();
+
+        //tablaUsuarios.enable(false);
     }
 
     /**
@@ -37,9 +59,11 @@ int id;
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCategorias = new javax.swing.JTable();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Maestro de Categorias");
 
         jScrollPane1.setViewportView(jTextPane1);
@@ -65,20 +89,30 @@ int id;
             }
         });
 
-        btnBuscar.setText("buscar");
+        btnBuscar.setText("Buscar");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCategorias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Nombre de la Categoria", "Descripción"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        tablaCategorias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaCategoriasMouseClicked(evt);
+            }
+        });
+        tablaCategorias.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tablaCategoriasPropertyChange(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaCategorias);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +128,7 @@ int id;
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificar)
@@ -123,7 +157,7 @@ int id;
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        MaestroCategorias c = new MaestroCategorias("m",id);
+        MaestroCategorias c = new MaestroCategorias("m", id);
         Menu.desktopPane.add(c);
         c.toFront();
         c.setVisible(true);
@@ -131,15 +165,36 @@ int id;
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "el id es: " + id);
+        dao.Eliminar(id);
+        llenardatos();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
-         MaestroCategorias c = new MaestroCategorias("c",id);
+        MaestroCategorias c = new MaestroCategorias("c", id);
         Menu.desktopPane.add(c);
         c.toFront();
         c.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void tablaCategoriasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCategoriasMouseClicked
+        // TODO add your handling code here:
+
+        if (evt.getClickCount() >= 0) {
+            System.out.println("se hizo click: " + tablaCategorias.getSelectedRow());
+            System.out.println("id del usuario" + datos.get(tablaCategorias.getSelectedRow()).getIdCategoria());
+            id = datos.get(tablaCategorias.getSelectedRow()).getIdCategoria();
+
+        }
+
+    }//GEN-LAST:event_tablaCategoriasMouseClicked
+
+    private void tablaCategoriasPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablaCategoriasPropertyChange
+        // TODO add your handling code here:
+
+        //id=datos.get(tablaCategorias.getSelectedRow()).getIdCategoria();
+    }//GEN-LAST:event_tablaCategoriasPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -149,7 +204,28 @@ int id;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTable tablaCategorias;
     // End of variables declaration//GEN-END:variables
+
+    private void llenardatos() {
+       datos.clear();
+       datos = dao.Lista();
+        obj = new Object[datos.size()];
+        model = new DefaultTableModel(columnas, 0);
+
+        for (int i = 0; i < datos.size(); i++) {
+
+            model.addRow(obj);
+            model.setValueAt(datos.get(i).getIdCategoria(), i, 0);
+            model.setValueAt(datos.get(i).getNombreCategoria(), i, 1);
+            model.setValueAt(datos.get(i).getDescripcion(), i, 2);
+
+            System.out.println("idUsuario: " + datos.get(i).getIdCategoria());
+            System.out.println("Nombre: " + datos.get(i).getNombreCategoria());
+            System.out.println("Descripcion: " + datos.get(i).getDescripcion());
+        }
+
+        tablaCategorias.setModel(model);
+    }
 }

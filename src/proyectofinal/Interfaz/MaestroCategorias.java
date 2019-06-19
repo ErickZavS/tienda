@@ -5,6 +5,7 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.List;
 import proyectofinal.DAO.CategoriasDAO;
 import proyectofinal.Modelo.CategoriaModelo;
 
@@ -13,25 +14,29 @@ import proyectofinal.Modelo.CategoriaModelo;
  * @author USUARIO
  */
 public class MaestroCategorias extends javax.swing.JInternalFrame {
-String TipoOpe;
-int id;
+
+    String TipoOpe;
+    int id;
     CategoriasDAO dao;
+
     /**
      * Creates new form MaestroCategorias
      */
     public MaestroCategorias() {
         initComponents();
     }
-    public MaestroCategorias(String TipoOpe,int id) {
+
+    public MaestroCategorias(String TipoOpe, int id) {
         initComponents();
         this.TipoOpe = TipoOpe;
         this.id = id;
-        dao =new CategoriasDAO();
-        
-        if (TipoOpe.equalsIgnoreCase("c")){
+        dao = new CategoriasDAO();
+
+        if (TipoOpe.equalsIgnoreCase("c")) {
             btnAceptar.setText("Guardar");
-            
-        }else{
+
+        } else {
+            llenardatos(id);
             btnAceptar.setText("Modificar");
         }
     }
@@ -141,22 +146,22 @@ int id;
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
-        
+
         dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
-        CategoriaModelo categorias =new CategoriaModelo();
+        // TODO add your handling code here:<>
+        CategoriaModelo categorias = new CategoriaModelo();
         categorias.setNombreCategoria(txtNombreCategoria.getText());
         categorias.setDescripcion(txtDescripcion.getText());
         categorias.setIdCategoria(id);
-        if (TipoOpe.equalsIgnoreCase("c")){
-            
-           dao.Crear(categorias);
-            
-        }else{
-             dao.Actualizar(categorias);
+        if (TipoOpe.equalsIgnoreCase("c")) {
+
+            dao.Crear(categorias);
+        } else {
+
+            dao.Actualizar(categorias);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -173,4 +178,15 @@ int id;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtNombreCategoria;
     // End of variables declaration//GEN-END:variables
+
+    private void llenardatos(int id) {
+
+        List<CategoriaModelo> data = dao.ListaID(id);
+        for (CategoriaModelo categoriaModelo : data) {
+            txtDescripcion.setText(categoriaModelo.getDescripcion());
+            txtNombreCategoria.setText(categoriaModelo.getNombreCategoria());
+
+        }
+
+    }
 }

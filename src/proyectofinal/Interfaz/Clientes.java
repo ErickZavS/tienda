@@ -5,8 +5,16 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.plaf.DesktopPaneUI;
+import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.INITIALIZE;
+import proyectofinal.DAO.CategoriasDAO;
+import proyectofinal.DAO.ClienteDAO;
+import proyectofinal.DAO.EmpleadoDAO;
+import proyectofinal.Modelo.CategoriaModelo;
+import proyectofinal.Modelo.ClienteModelo;
 
 /**
  *
@@ -14,11 +22,43 @@ import org.omg.CORBA.INITIALIZE;
  */
 public class Clientes extends javax.swing.JInternalFrame {
 int id;
+
+DefaultTableModel model;
+    Object columnas[]={"ID", "Nombre de Compañia", "Nombre de Contacto", "Cargo de Contacto", "Dirección", "Ciudad", "Teléfono"};
+    Object[] obj;
+    
+    ClienteDAO dao ;    
+    List<ClienteModelo> datos=new ArrayList<>();
+    ClienteModelo usuario;
+    Integer idUsuario;
     /**
      * Creates new form Proveedores
      */
     public Clientes() {
         initComponents();
+        
+        dao=new ClienteDAO();
+        datos =dao.Lista();
+        obj=new Object[datos.size()];
+        model = new DefaultTableModel(columnas,0);
+        for (int i = 0; i < datos.size(); i++) {
+            
+            model.addRow(obj);
+            model.setValueAt(datos.get(i).getIdCliente(), i, 0);
+            model.setValueAt(datos.get(i).getNombreCompañia(), i, 1);
+            model.setValueAt(datos.get(i).getNombreContacto(), i, 2);
+            model.setValueAt(datos.get(i).getCargoContacto(), i, 3);
+            model.setValueAt(datos.get(i).getDireccion(), i, 4);
+            model.setValueAt(datos.get(i).getCiudad(), i, 5);
+            model.setValueAt(datos.get(i).getTelefono(), i, 6);
+            
+            System.out.println("idUsuario: "+datos.get(i).getIdCliente());
+            System.out.println("Nombre: "+datos.get(i).getNombreCompañia());
+            System.out.println("Descripcion: "+datos.get(i).getNombreContacto());
+        }
+        
+        tablaClientes.setModel(model);
+        //tablaUsuarios.enable(false);
     }
 
     /**
@@ -37,10 +77,10 @@ int id;
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaClientes = new javax.swing.JTable();
 
         setClosable(true);
-        setTitle("Maestro de Categorias");
+        setTitle("Maestro de Clientes");
 
         jScrollPane1.setViewportView(jTextPane1);
 
@@ -65,9 +105,9 @@ int id;
             }
         });
 
-        btnBuscar.setText("buscar");
+        btnBuscar.setText("Buscar");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,7 +118,7 @@ int id;
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tablaClientes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +134,7 @@ int id;
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificar)
@@ -149,7 +189,7 @@ int id;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTable tablaClientes;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,17 +5,31 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import proyectofinal.DAO.CategoriasDAO;
+import proyectofinal.DAO.UsuarioDAO;
+import proyectofinal.Modelo.CategoriaModelo;
+import proyectofinal.Modelo.UsuarioModelo;
+
 /**
  *
  * @author USUARIO
  */
 public class Login extends javax.swing.JFrame {
 
+    UsuarioDAO dao;
+    List<UsuarioModelo> datos = new ArrayList<>();
+    Integer idUsuarios;
+
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
+
+        dao = new UsuarioDAO();
     }
 
     /**
@@ -29,10 +43,10 @@ public class Login extends javax.swing.JFrame {
 
         jPasswordField1 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        txtContraseña = new javax.swing.JPasswordField();
 
         jPasswordField1.setText("jPasswordField1");
 
@@ -63,8 +77,8 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                    .addComponent(jPasswordField2))
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                    .addComponent(txtContraseña))
                 .addGap(50, 50, 50))
             .addGroup(layout.createSequentialGroup()
                 .addGap(115, 115, 115)
@@ -76,12 +90,12 @@ public class Login extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -92,10 +106,25 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Menu m = new Menu();
-        m.setVisible(true);
-        dispose();
-        
+        //JOptionPane.showMessageDialog(null, "La clave es "+txtContraseña.getText().trim());
+        datos = dao.Login(txtUsuario.getText());
+        if (datos.size() > 0) {
+            // JOptionPane.showMessageDialog(null, "La clave es "+datos.get(0).getContraseña());
+            if (datos.get(0).getContraseña().equalsIgnoreCase(txtContraseña.getText().trim())) {
+                Menu m = new Menu();
+                m.setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "La clave es incorrecta");
+                txtContraseña.setText("");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "El usuario no existe");
+            txtUsuario.setText("");
+            txtContraseña.setText("");
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -138,7 +167,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField txtContraseña;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

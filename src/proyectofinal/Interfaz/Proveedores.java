@@ -5,8 +5,16 @@
  */
 package proyectofinal.Interfaz;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.plaf.DesktopPaneUI;
+import javax.swing.table.DefaultTableModel;
 import org.omg.CORBA.INITIALIZE;
+import proyectofinal.DAO.ClienteDAO;
+import proyectofinal.DAO.ProveedoresDAO;
+import proyectofinal.Modelo.ClienteModelo;
+import proyectofinal.Modelo.ProductosModelo;
+import proyectofinal.Modelo.ProveedoresModelo;
 
 /**
  *
@@ -14,11 +22,43 @@ import org.omg.CORBA.INITIALIZE;
  */
 public class Proveedores extends javax.swing.JInternalFrame {
 int id;
+
+DefaultTableModel model;
+    Object columnas[]={"ID", "Nombre de Compañia", "Nombre de Contacto", "Cargo de Contacto", "Dirección", "Ciudad", "Teléfono"};
+    Object[] obj;
+    
+    ProveedoresDAO dao ;    
+    List<ProveedoresModelo> datos=new ArrayList<>();
+    ProveedoresModelo usuario;
+    Integer idUsuario;
     /**
      * Creates new form Proveedores
      */
     public Proveedores() {
         initComponents();
+        
+        dao=new ProveedoresDAO();
+        datos =dao.Lista();
+        obj=new Object[datos.size()];
+        model = new DefaultTableModel(columnas,0);
+        for (int i = 0; i < datos.size(); i++) {
+            
+            model.addRow(obj);
+            model.setValueAt(datos.get(i).getIdProveedores(), i, 0);
+            model.setValueAt(datos.get(i).getNombreCompañia(), i, 1);
+            model.setValueAt(datos.get(i).getNombreContacto(), i, 2);
+            model.setValueAt(datos.get(i).getCargoContacto(), i, 3);
+            model.setValueAt(datos.get(i).getDireccion(), i, 4);
+            model.setValueAt(datos.get(i).getCiudad(), i, 5);
+            model.setValueAt(datos.get(i).getTelefono(), i, 6);
+            
+            System.out.println("idUsuario: "+datos.get(i).getIdProveedores());
+            System.out.println("Nombre: "+datos.get(i).getNombreCompañia());
+            System.out.println("Descripcion: "+datos.get(i).getNombreContacto());
+        }
+        
+        tablaProveedores.setModel(model);
+        //tablaUsuarios.enable(false);
     }
 
     /**
@@ -37,11 +77,16 @@ int id;
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaProveedores = new javax.swing.JTable();
 
         setClosable(true);
-        setTitle("Maestro de Categorias");
+        setTitle("Maestro de Proveedores");
 
+        jTextPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextPane1KeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextPane1);
 
         btnNuevo.setText("Nuevo");
@@ -65,9 +110,9 @@ int id;
             }
         });
 
-        btnBuscar.setText("buscar");
+        btnBuscar.setText("Buscar");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProveedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -78,7 +123,12 @@ int id;
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        tablaProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaProveedoresMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaProveedores);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,7 +144,7 @@ int id;
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                         .addComponent(btnNuevo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnModificar)
@@ -141,6 +191,16 @@ int id;
         c.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void jTextPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane1KeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTextPane1KeyPressed
+
+    private void tablaProveedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProveedoresMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tablaProveedoresMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -149,7 +209,7 @@ int id;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTable tablaProveedores;
     // End of variables declaration//GEN-END:variables
 }

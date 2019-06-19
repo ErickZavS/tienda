@@ -5,6 +5,7 @@
  */
 package proyectofinal.DAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,15 +18,19 @@ import proyectofinal.Modelo.ClienteModelo;
  */
 public class ClienteDAO {
 
-    Conexion conectar;
+    private static Connection conectar=null;
     PreparedStatement ps;
     ResultSet rs;
+    
+    public ClienteDAO() {
+    
+}
 
     public void Crear(ClienteModelo clienteModelo) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("INSERT INTO diccionario(Palabra) values(?);");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("INSERT INTO clientes(NombreCompañia, NombreContacto, CargoContacto, Direccion, Ciudad, Telefono) values(?,?,?,?,?,?);");
             ps.setString(1, clienteModelo.getNombreCompañia());
             ps.setString(2, clienteModelo.getNombreContacto());
             ps.setString(3, clienteModelo.getCargoContacto());
@@ -41,7 +46,7 @@ public class ClienteDAO {
                 System.out.println("Error al registrar en la tabla Diccionario");
             }
 
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -54,8 +59,8 @@ public class ClienteDAO {
     public void Actualizar(ClienteModelo clienteModelo) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("UPDATE diccionario SET nivel=? WHERE IdDiccionario=? ;");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("UPDATE clientes SET NombreCompañia=?, NombreContacto=?, CargoContacto=?, Direccion=?, Ciudad=?, Telefono=? WHERE idclientes=? ;");
             ps.setString(1, clienteModelo.getNombreCompañia());
             ps.setString(2, clienteModelo.getNombreContacto());
             ps.setString(3, clienteModelo.getCargoContacto());
@@ -72,7 +77,7 @@ public class ClienteDAO {
                 System.out.println("Error al actualizar");
             }
             //conectar.getconexion().commit();
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -87,8 +92,8 @@ public class ClienteDAO {
         ClienteModelo clienteModelo;
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("SELECT * FROM diccionario where nivel=0;");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("SELECT * FROM clientes;");
             //ps.setString(1, dni);
             //ps.setInt(2, estado);
 
@@ -113,7 +118,7 @@ public class ClienteDAO {
 
             }
             System.out.println("cantidad de registros: " + cantidad);
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
@@ -126,8 +131,8 @@ public class ClienteDAO {
     public void Eliminar(int IdCliente) {
         try {
             System.out.println("Intentando conectar a la base de datos");
-            conectar.getconexion();
-            ps = conectar.getconexion().prepareStatement("DELETE FROM diccionario(Palabra) values(?);");
+            conectar=Conexion.getconexion();
+            ps = conectar.prepareStatement("DELETE FROM clientes WHERE idclientes=?;");
             ps.setInt(1, IdCliente);
 
             int Resultado = ps.executeUpdate();
@@ -138,7 +143,7 @@ public class ClienteDAO {
                 System.out.println("Error al registrar en la tabla Diccionario");
             }
 
-            conectar.getconexion().close();
+            conectar.close();
         } catch (Exception e) {
             System.out.println("error: " + e.getLocalizedMessage());
 
