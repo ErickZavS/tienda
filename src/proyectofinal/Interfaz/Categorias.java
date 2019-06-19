@@ -53,7 +53,7 @@ public class Categorias extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtbuscar = new javax.swing.JTextPane();
         btnNuevo = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -66,7 +66,15 @@ public class Categorias extends javax.swing.JInternalFrame {
         setResizable(true);
         setTitle("Maestro de Categorias");
 
-        jScrollPane1.setViewportView(jTextPane1);
+        txtbuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtbuscarKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbuscarKeyTyped(evt);
+            }
+        });
+        jScrollPane1.setViewportView(txtbuscar);
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -90,6 +98,11 @@ public class Categorias extends javax.swing.JInternalFrame {
         });
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         tablaCategorias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -196,6 +209,21 @@ public class Categorias extends javax.swing.JInternalFrame {
         //id=datos.get(tablaCategorias.getSelectedRow()).getIdCategoria();
     }//GEN-LAST:event_tablaCategoriasPropertyChange
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        buscar(txtbuscar.getText());
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtbuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarKeyPressed
+        // TODO add your handling code here:
+         
+    }//GEN-LAST:event_txtbuscarKeyPressed
+
+    private void txtbuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarKeyTyped
+        // TODO add your handling code here:
+        buscar(txtbuscar.getText());
+    }//GEN-LAST:event_txtbuscarKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -204,8 +232,8 @@ public class Categorias extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTable tablaCategorias;
+    private javax.swing.JTextPane txtbuscar;
     // End of variables declaration//GEN-END:variables
 
     private void llenardatos() {
@@ -224,6 +252,41 @@ public class Categorias extends javax.swing.JInternalFrame {
             System.out.println("idUsuario: " + datos.get(i).getIdCategoria());
             System.out.println("Nombre: " + datos.get(i).getNombreCategoria());
             System.out.println("Descripcion: " + datos.get(i).getDescripcion());
+        }
+
+        tablaCategorias.setModel(model);
+    }
+
+    private void buscar(String texto) {
+        
+        List<CategoriaModelo> filtro=new ArrayList<>();
+        CategoriaModelo c ;
+        
+        filtro.clear();
+         for (int i = 0; i < datos.size(); i++) {
+             if (datos.get(i).getDescripcion().contains(texto) || datos.get(i).getNombreCategoria().contains(texto) ){
+                 c=new CategoriaModelo();
+                 c.setIdCategoria(datos.get(i).getIdCategoria());
+                 c.setDescripcion(datos.get(i).getDescripcion());
+                 c.setNombreCategoria(datos.get(i).getNombreCategoria());
+                 filtro.add(c);
+             }
+         }
+        Object[] obj;
+ 
+        obj = new Object[datos.size()];
+        model = new DefaultTableModel(columnas, 0);
+
+        for (int i = 0; i < filtro.size(); i++) {
+
+            model.addRow(obj);
+            model.setValueAt(filtro.get(i).getIdCategoria(), i, 0);
+            model.setValueAt(filtro.get(i).getNombreCategoria(), i, 1);
+            model.setValueAt(filtro.get(i).getDescripcion(), i, 2);
+
+            System.out.println("idUsuario: " + filtro.get(i).getIdCategoria());
+            System.out.println("Nombre: " + filtro.get(i).getNombreCategoria());
+            System.out.println("Descripcion: " + filtro.get(i).getDescripcion());
         }
 
         tablaCategorias.setModel(model);
